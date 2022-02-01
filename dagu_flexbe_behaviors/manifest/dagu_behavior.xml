@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Dagu_Behavior">
+
+	<executable package_path="dagu_flexbe_behaviors.dagu_behavior_sm" class="Dagu_BehaviorSM" />
+	<tagstring>dagu</tagstring>
+	<author>Jacques Tea</author>
+	<date>Thu Jan 20 2022</date>
+	<description>
+		Behavior for the Dagu project
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+	<params>
+
+		<param type="numeric" name="default_id" default="0" label="default_id" hint="Sets the default_id">
+			<min value="0" />
+			<max value="0" />
+		</param>
+
+		<param type="numeric" name="detected_id" default="0" label="detected_id" hint="Sets the detected_id">
+			<min value="0" />
+			<max value="9" />
+		</param>
+
+	</params>
+
+
+</behavior>
