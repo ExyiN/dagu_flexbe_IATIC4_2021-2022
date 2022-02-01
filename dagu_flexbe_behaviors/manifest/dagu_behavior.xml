@@ -16,12 +16,7 @@
 	<!-- Available Parameters -->
 	<params>
 
-		<param type="numeric" name="default_id" default="0" label="default_id" hint="Sets the default_id">
-			<min value="0" />
-			<max value="0" />
-		</param>
-
-		<param type="numeric" name="detected_id" default="0" label="detected_id" hint="Sets the detected_id">
+		<param type="numeric" name="detectedID" default="0" label="detectedID" hint="Sets the detectedID">
 			<min value="0" />
 			<max value="9" />
 		</param>

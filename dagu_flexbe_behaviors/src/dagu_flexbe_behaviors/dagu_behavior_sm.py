@@ -9,7 +9,7 @@
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from dagu_flexbe_states.dagu_initial_state import DaguInitialState
-from flexbe_states.log_state import LogState
+from dagu_flexbe_states.dagu_stop_state import DaguStopState
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -31,8 +31,7 @@ class Dagu_BehaviorSM(Behavior):
 		self.name = 'Dagu_Behavior'
 
 		# parameters of this behavior
-		self.add_parameter('default_id', 0)
-		self.add_parameter('detected_id', 0)
+		self.add_parameter('detectedID', 0)
 
 		# references to used behaviors
 
@@ -46,8 +45,8 @@ class Dagu_BehaviorSM(Behavior):
 
 
 	def create(self):
-		changing_msg = "Changement d'état !"
-		not_changing_msg = "On reste dans l'état actuel"
+		default = "Etat initial"
+		stop = "Panneau stop détecté"
 		# x:54 y:499, x:237 y:502
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
@@ -58,23 +57,17 @@ class Dagu_BehaviorSM(Behavior):
 
 
 		with _state_machine:
-			# x:329 y:136
+			# x:263 y:109
 			OperatableStateMachine.add('Initial_State',
-										DaguInitialState(default_id=self.default_id, detected_id=self.detected_id),
-										transitions={'changing_state': 'Print_changing', 'not_changing': 'Print_not_changing'},
-										autonomy={'changing_state': Autonomy.Off, 'not_changing': Autonomy.Off})
+										DaguInitialState(detectedID=self.detectedID),
+										transitions={'default': 'finished', 'stop': 'Stop_State', 'failed': 'failed'},
+										autonomy={'default': Autonomy.Off, 'stop': Autonomy.Off, 'failed': Autonomy.Off})
 
-			# x:136 y:305
-			OperatableStateMachine.add('Print_changing',
-										LogState(text=changing_msg, severity=Logger.REPORT_HINT),
-										transitions={'done': 'finished'},
-										autonomy={'done': Autonomy.High})
-
-			# x:411 y:350
-			OperatableStateMachine.add('Print_not_changing',
-										LogState(text=not_changing_msg, severity=Logger.REPORT_HINT),
-										transitions={'done': 'finished'},
-										autonomy={'done': Autonomy.High})
+			# x:401 y:326
+			OperatableStateMachine.add('Stop_State',
+										DaguStopState(),
+										transitions={'restarting': 'finished'},
+										autonomy={'restarting': Autonomy.Off})
 
 
 		return _state_machine
