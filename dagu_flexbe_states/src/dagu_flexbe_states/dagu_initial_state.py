@@ -15,7 +15,11 @@ class DaguInitialState(EventState):
     #> linkedState          int     Etat lié à l'élément détecté.
 
     <= default		                Le Dagu n'a rien détecté.
-    <= stop                         Le Dagu a détecté un STOP.
+    <= stop                         Le Dagu a détecté un panneau STOP.
+    <= speed_50                     Le Dagu a détecté un panneau 50.
+    <= yield                        Le Dagu a détecté un panneau "Céder le passage".
+    <= forbidden                    Le Dagu a détecté un panneau "Interdit".
+    <= danger                       Le Dagu a détecté un panneau "Danger".
     <= failed                       Erreur.
 
     '''
