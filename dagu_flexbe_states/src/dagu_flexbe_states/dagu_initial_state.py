@@ -2,7 +2,6 @@
 import rospy
 
 from flexbe_core import EventState, Logger
-from ....signs_states import *
 
 class DaguInitialState(EventState):
     '''
@@ -25,26 +24,26 @@ class DaguInitialState(EventState):
     '''
 
     def __init__(self, detectedID):
-        super(DaguInitialState, self).__init__(outcomes = ['default', 'stop', 'failed'])
+        super(DaguInitialState, self).__init__(outcomes = ['default', 'stop', 'speed_50', 'yieldSign', 'forbidden', 'danger'])
         self._detectedID = detectedID
 
     def execute(self, userdata):
-        if self._detectedID == signs.GN_DEFAULT:
+        if self._detectedID == 0:
             Logger.loginfo('DEFAULT')
             return 'default'
-        elif self._detectedID == signs.GN_STOP:
+        elif self._detectedID == 1:
             Logger.loginfo('STOP')
             return 'stop'
-        elif self._detectedID == signs.GN_SPEED_50:
+        elif self._detectedID == 2:
             Logger.loginfo('SPEED_50')
             return 'speed_50'
-        elif self._detectedID == signs.GN_YIELD:
+        elif self._detectedID == 3:
             Logger.loginfo('YIELD')
             return 'yieldSign'
-        elif self._detectedID == signs.GN_FORBIDDEN:
+        elif self._detectedID == 4:
             Logger.loginfo('FORBIDDEN')
             return 'forbidden'
-        elif self._detectedID == signs.GN_DANGER:
+        elif self._detectedID == 5:
             Logger.loginfo('DANGER')
             return 'danger'
         else:
