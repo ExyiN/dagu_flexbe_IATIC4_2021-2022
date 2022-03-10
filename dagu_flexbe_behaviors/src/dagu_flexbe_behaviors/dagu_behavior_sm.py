@@ -62,7 +62,7 @@ class Dagu_BehaviorSM(Behavior):
 			# x:260 y:304
 			OperatableStateMachine.add('Initial_State',
 										DaguInitialState(detectedID=self.detectedID),
-										transitions={'default': 'finished', 'stop': 'Stop_State', 'speed_50': 'Speed50', 'yieldSign': 'Yield', 'forbidden': 'Forbidden', 'danger': 'Danger', 'failed': 'failed'},
+										transitions={'default': 'Initial_State', 'stop': 'Stop_State', 'speed_50': 'Speed50', 'yieldSign': 'Yield', 'forbidden': 'Forbidden', 'danger': 'Danger', 'failed': 'failed'},
 										autonomy={'default': Autonomy.Off, 'stop': Autonomy.Off, 'speed_50': Autonomy.Off, 'yieldSign': Autonomy.Off, 'forbidden': Autonomy.Off, 'danger': Autonomy.Off, 'failed': Autonomy.Off})
 
 			# x:550 y:383
@@ -74,25 +74,25 @@ class Dagu_BehaviorSM(Behavior):
 			# x:549 y:465
 			OperatableStateMachine.add('Speed50',
 										DaguSpeed50State(),
-										transitions={'changing': 'finished'},
+										transitions={'changing': 'Initial_State'},
 										autonomy={'changing': Autonomy.Off})
 
-			# x:557 y:129
+			# x:551 y:62
 			OperatableStateMachine.add('Stop_State',
 										DaguStopState(),
-										transitions={'restarting': 'finished'},
+										transitions={'restarting': 'Initial_State'},
 										autonomy={'restarting': Autonomy.Off})
 
 			# x:549 y:545
 			OperatableStateMachine.add('Yield',
 										DaguYieldState(),
-										transitions={'restarting': 'finished'},
+										transitions={'restarting': 'Initial_State'},
 										autonomy={'restarting': Autonomy.Off})
 
 			# x:554 y:211
 			OperatableStateMachine.add('Danger',
 										DaguDangerState(),
-										transitions={'restarting': 'finished'},
+										transitions={'restarting': 'Initial_State'},
 										autonomy={'restarting': Autonomy.Off})
 
 

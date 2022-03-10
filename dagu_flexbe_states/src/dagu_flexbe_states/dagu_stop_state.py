@@ -16,8 +16,13 @@ class DaguStopState(EventState):
     def __init__(self):
         super(DaguStopState, self).__init__(outcomes = ['restarting'])
         self._timeToWait = rospy.Duration(3)
+    
+    def execute(self, userdata):
+        if(rospy.Time.now() - self._startTime >= self._timeToWait):
+            return 'restarting'
 
     def on_enter(self, userdata):
+        self._startTime = rospy.Time.now()
         Logger.loginfo('Arrêt du véhicule...')
 
     def on_exit(self, userdata):
