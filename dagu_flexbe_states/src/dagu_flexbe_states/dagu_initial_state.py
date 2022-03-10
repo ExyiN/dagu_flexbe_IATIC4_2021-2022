@@ -24,11 +24,7 @@ class DaguInitialState(EventState):
     '''
 
     def __init__(self, detectedID):
-<<<<<<< HEAD
         super(DaguInitialState, self).__init__(outcomes = ['default', 'stop', 'speed_50', 'yieldSign', 'forbidden', 'danger', 'failed'])
-=======
-        super(DaguInitialState, self).__init__(outcomes = ['default', 'stop', 'speed_50', 'yieldSign', 'forbidden', 'danger'])
->>>>>>> c6a525feb1e50a0197bafc2a8961f85c36f585c1
         self._detectedID = detectedID
 
     def execute(self, userdata):

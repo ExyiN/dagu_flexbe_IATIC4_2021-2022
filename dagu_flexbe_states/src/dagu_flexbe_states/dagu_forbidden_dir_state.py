@@ -19,11 +19,6 @@ class DaguForbiddenDirState(EventState):
     def on_enter(self, userdata):
         Logger.loginfo('Sens interdit détecté.')
         Logger.loginfo('Arrêt de la machine...')
-<<<<<<< HEAD
         
     def execute(self, userdata):
         return 'idle'
-=======
-        #Trouver comment arrêter le Dagu
-        
->>>>>>> c6a525feb1e50a0197bafc2a8961f85c36f585c1
