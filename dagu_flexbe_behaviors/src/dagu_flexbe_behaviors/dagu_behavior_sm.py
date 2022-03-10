@@ -8,8 +8,12 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
+from dagu_flexbe_states.dagu_danger_state import DaguDangerState
+from dagu_flexbe_states.dagu_forbidden_dir_state import DaguForbiddenDirState
 from dagu_flexbe_states.dagu_initial_state import DaguInitialState
+from dagu_flexbe_states.dagu_speed_50_state import DaguSpeed50State
 from dagu_flexbe_states.dagu_stop_state import DaguStopState
+from dagu_flexbe_states.dagu_yield_state import DaguYieldState
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -45,9 +49,7 @@ class Dagu_BehaviorSM(Behavior):
 
 
 	def create(self):
-		default = "Etat initial"
-		stop = "Panneau stop détecté"
-		# x:54 y:499, x:237 y:502
+		# x:978 y:342, x:237 y:502
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
@@ -57,15 +59,39 @@ class Dagu_BehaviorSM(Behavior):
 
 
 		with _state_machine:
-			# x:263 y:109
+			# x:260 y:304
 			OperatableStateMachine.add('Initial_State',
 										DaguInitialState(detectedID=self.detectedID),
-										transitions={'default': 'finished', 'stop': 'Stop_State', 'failed': 'failed'},
-										autonomy={'default': Autonomy.Off, 'stop': Autonomy.Off, 'failed': Autonomy.Off})
+										transitions={'default': 'finished', 'stop': 'Stop_State', 'speed_50': 'Speed50', 'yieldSign': 'Yield', 'forbidden': 'Forbidden', 'danger': 'Danger', 'failed': 'failed'},
+										autonomy={'default': Autonomy.Off, 'stop': Autonomy.Off, 'speed_50': Autonomy.Off, 'yieldSign': Autonomy.Off, 'forbidden': Autonomy.Off, 'danger': Autonomy.Off, 'failed': Autonomy.Off})
 
-			# x:401 y:326
+			# x:550 y:383
+			OperatableStateMachine.add('Forbidden',
+										DaguForbiddenDirState(),
+										transitions={'idle': 'finished'},
+										autonomy={'idle': Autonomy.Off})
+
+			# x:549 y:465
+			OperatableStateMachine.add('Speed50',
+										DaguSpeed50State(),
+										transitions={'changing': 'finished'},
+										autonomy={'changing': Autonomy.Off})
+
+			# x:557 y:129
 			OperatableStateMachine.add('Stop_State',
 										DaguStopState(),
+										transitions={'restarting': 'finished'},
+										autonomy={'restarting': Autonomy.Off})
+
+			# x:549 y:545
+			OperatableStateMachine.add('Yield',
+										DaguYieldState(),
+										transitions={'restarting': 'finished'},
+										autonomy={'restarting': Autonomy.Off})
+
+			# x:554 y:211
+			OperatableStateMachine.add('Danger',
+										DaguDangerState(),
 										transitions={'restarting': 'finished'},
 										autonomy={'restarting': Autonomy.Off})
 
