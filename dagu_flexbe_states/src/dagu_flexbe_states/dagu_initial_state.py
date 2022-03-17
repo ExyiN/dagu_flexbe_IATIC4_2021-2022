@@ -48,6 +48,7 @@ class DaguInitialState(EventState):
     def execute(self, userdata):
         with open(self._path_fifo, 'r') as fifo:
             self._detectedID = pipe.listener(fifo)
+            Logger.loginfo("Somme : " + str(self._detectedID))
 
         self.decompose()
 
