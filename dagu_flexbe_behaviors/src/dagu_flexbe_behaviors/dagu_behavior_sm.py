@@ -61,7 +61,7 @@ class Dagu_BehaviorSM(Behavior):
 		with _state_machine:
 			# x:260 y:304
 			OperatableStateMachine.add('Initial_State',
-										DaguInitialState(detectedID=self.detectedID),
+										DaguInitialState(),
 										transitions={'default': 'Initial_State', 'stop': 'Stop_State', 'speed_50': 'Speed50', 'yieldSign': 'Yield', 'forbidden': 'Forbidden', 'danger': 'Danger', 'failed': 'failed'},
 										autonomy={'default': Autonomy.Off, 'stop': Autonomy.Off, 'speed_50': Autonomy.Off, 'yieldSign': Autonomy.Off, 'forbidden': Autonomy.Off, 'danger': Autonomy.Off, 'failed': Autonomy.Off})
 
