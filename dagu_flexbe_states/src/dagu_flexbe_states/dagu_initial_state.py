@@ -46,6 +46,7 @@ class DaguInitialState(EventState):
         self.resetDTab()
 
     def execute(self, userdata):
+        Logger.loginfo("Avant open")
         with open(self._path_fifo, 'r') as fifo:
             self._detectedID = pipe.listener(fifo)
             Logger.loginfo("Somme : " + str(self._detectedID))
