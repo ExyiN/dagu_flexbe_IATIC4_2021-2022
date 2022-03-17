@@ -86,7 +86,7 @@ class DaguInitialState(EventState):
     def decompose(self):
         for i in range(5, 0, -1):
             power = pow(2, i)
-            if self._detectedID > power:
+            if self._detectedID >= power:
                 self._detectedID -= power
                 self._detectedTab[i] = 1
             
