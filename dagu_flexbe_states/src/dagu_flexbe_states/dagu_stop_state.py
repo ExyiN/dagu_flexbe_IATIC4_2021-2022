@@ -1,4 +1,6 @@
+# -*- coding: utf-8 -*-
 #!/usr/bin/env python
+
 import rospy
 
 from flexbe_core import EventState, Logger
