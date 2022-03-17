@@ -2,7 +2,7 @@
 #!/usr/bin/env python
 
 import rospy
-
+import dagu_initial_state
 from flexbe_core import EventState, Logger
 
 
@@ -24,3 +24,6 @@ class DaguForbiddenDirState(EventState):
         
     def execute(self, userdata):
         return 'idle'
+    
+    def on_exit(self, userdata):
+        close(dagu_initial_state.DaguInitialState._fifo)
