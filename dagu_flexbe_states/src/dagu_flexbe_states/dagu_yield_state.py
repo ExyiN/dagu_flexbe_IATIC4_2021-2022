@@ -25,7 +25,6 @@ class DaguYieldState(EventState):
         self._startTime = rospy.Time.now()
         Logger.loginfo('Panneau "Céder le passage" détecté.')
         Logger.loginfo('Arrêt de la machine...')
-        #Définir le moment où il faut redémarrer
 
     def on_exit(self, userdata):
         Logger.loginfo('Redémarrage du véhicule...')
