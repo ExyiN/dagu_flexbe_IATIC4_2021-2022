@@ -11,6 +11,7 @@ from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyC
 from dagu_flexbe_states.dagu_danger_state import DaguDangerState
 from dagu_flexbe_states.dagu_forbidden_dir_state import DaguForbiddenDirState
 from dagu_flexbe_states.dagu_initial_state import DaguInitialState
+from dagu_flexbe_states.dagu_priority_state import DaguPriorityState
 from dagu_flexbe_states.dagu_speed_50_state import DaguSpeed50State
 from dagu_flexbe_states.dagu_stop_state import DaguStopState
 from dagu_flexbe_states.dagu_yield_state import DaguYieldState
@@ -62,14 +63,20 @@ class Dagu_BehaviorSM(Behavior):
 			# x:260 y:304
 			OperatableStateMachine.add('Initial_State',
 										DaguInitialState(),
-										transitions={'default': 'Initial_State', 'stop': 'Stop_State', 'speed_50': 'Speed50', 'yieldSign': 'Yield', 'forbidden': 'Forbidden', 'danger': 'Danger', 'failed': 'failed'},
-										autonomy={'default': Autonomy.Off, 'stop': Autonomy.Off, 'speed_50': Autonomy.Off, 'yieldSign': Autonomy.Off, 'forbidden': Autonomy.Off, 'danger': Autonomy.Off, 'failed': Autonomy.Off})
+										transitions={'default': 'Initial_State', 'stop': 'Stop_State', 'speed_50': 'Speed50', 'yieldSign': 'Yield', 'forbidden': 'Forbidden', 'danger': 'Danger', 'priority': 'Priority', 'failed': 'failed'},
+										autonomy={'default': Autonomy.Off, 'stop': Autonomy.Off, 'speed_50': Autonomy.Off, 'yieldSign': Autonomy.Off, 'forbidden': Autonomy.Off, 'danger': Autonomy.Off, 'priority': Autonomy.Off, 'failed': Autonomy.Off})
 
 			# x:550 y:383
 			OperatableStateMachine.add('Forbidden',
 										DaguForbiddenDirState(),
 										transitions={'idle': 'finished'},
 										autonomy={'idle': Autonomy.Off})
+
+			# x:552 y:280
+			OperatableStateMachine.add('Priority',
+										DaguPriorityState(),
+										transitions={'out': 'Initial_State'},
+										autonomy={'out': Autonomy.Off})
 
 			# x:549 y:465
 			OperatableStateMachine.add('Speed50',

@@ -11,7 +11,7 @@ class DaguDangerState(EventState):
     Etat du Dagu quand il détecte un panneau "Danger".
     Comportement à définir.
 
-    <= stop			    Le Dagu s'arrête.
+    <= restarting			    Le Dagu redémarre.
 
     '''
     
