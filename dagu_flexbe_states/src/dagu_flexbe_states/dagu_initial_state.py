@@ -16,9 +16,10 @@ class DaguInitialState(EventState):
     <= default		                Le Dagu n'a rien détecté.
     <= stop                         Le Dagu a détecté un panneau STOP.
     <= speed_50                     Le Dagu a détecté un panneau 50.
-    <= yield                        Le Dagu a détecté un panneau "Céder le passage".
+    <= yieldSign                    Le Dagu a détecté un panneau "Céder le passage".
     <= forbidden                    Le Dagu a détecté un panneau "Interdit".
     <= danger                       Le Dagu a détecté un panneau "Danger".
+    <= priority                     Le Dagu a détecté un panneau "Priorité".
     <= failed                       Erreur.
 
     '''
@@ -36,11 +37,8 @@ class DaguInitialState(EventState):
             self._buffer.append(sign)
 
         self._fifo = open(self._path_fifo, 'r')
-    def on_enter(self, userdata):
-        self.resetDTab()
 
     def execute(self, userdata):
-        Logger.loginfo("Avant open")
         self._detectedID = pipe.listener(self._fifo)
         if self._detectedID == -1:
             return 'default'
@@ -65,17 +63,11 @@ class DaguInitialState(EventState):
                 elif i == 4:
                     return 'stop'
                 elif i == 5:
-                    close(self._fifo)
                     return 'forbidden'
                 elif i == 6:
                     return 'danger'
                 else:
-                    close(self._fifo)
                     return 'failed'
-
-    def resetDTab(self):
-        for i in range(6):
-            self._detectedTab[i] = 0
 
     def decompose(self):
         for i in range(6, 0, -1):
