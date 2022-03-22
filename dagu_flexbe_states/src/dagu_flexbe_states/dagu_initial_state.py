@@ -11,7 +11,9 @@ import pipe
 class DaguInitialState(EventState):
     '''
     Etat initial du Dagu.
-    Il avance.
+    Partie qui gère toutes les redirections vers les autres états.
+    Dès qu'un panneau est détecté 5 fois, on passe à l'état correspondant pour exécuter les actions qu'il faut.
+    Si le panneau n'est pas détecté pendant 5 secondes, on réinitialise le nombre de fois qu'il a été détecté.
 
     <= default		                Le Dagu n'a rien détecté.
     <= stop                         Le Dagu a détecté un panneau STOP.
@@ -21,7 +23,6 @@ class DaguInitialState(EventState):
     <= danger                       Le Dagu a détecté un panneau "Danger".
     <= priority                     Le Dagu a détecté un panneau "Priorité".
     <= failed                       Erreur.
-
     '''
 
     def __init__(self):
@@ -30,12 +31,15 @@ class DaguInitialState(EventState):
         self._timeToWait = rospy.Duration(5)
         self._path_fifo = pipe.path
 
+        # Tableau des panneaux
         self._buffer = []
 
+        # Initialisation du tableau
         for i in range(7):
             sign = SignInfo()
             self._buffer.append(sign)
 
+        # Tube pour récupérer les données de l'IA
         self._fifo = open(self._path_fifo, 'r')
 
     def execute(self, userdata):
@@ -43,14 +47,18 @@ class DaguInitialState(EventState):
         if self._detectedID == -1:
             return 'default'
         Logger.loginfo("Somme : " + str(self._detectedID))
-
+        
+        # Si on a reçu un entier positif, c'est que l'IA a détecté des panneaux
+        # On décompose la somme reçue
         self.decompose()
 
+        # On regarde chaque panneau pour réinitialiser si ça fait plus de 5 s ou pour exécuter
         for i in range(1, 7):
             if(self._buffer[i].getTimer() != 0):
                 if(rospy.Time.now() - self._buffer[i].getTimer() >= self._timeToWait):
                     self._buffer[i].resetTimes()
 
+            # Exécution dès qu'on a détecté le panneau plus de 5 fois
             if self._buffer[i].getTimes() >= 5:
                 self._buffer[i].resetTimes()
             
@@ -80,6 +88,8 @@ class DaguInitialState(EventState):
             
 
 class SignInfo():
+    # timesDetected : nombre de fois qu'on a reçu le panneau
+    # timer : dernière fois que le panneau a été détecté
     def __init__(self):
         self.timesDetected = 0
         self.timer = 0
