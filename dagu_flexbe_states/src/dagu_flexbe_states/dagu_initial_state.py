@@ -49,33 +49,37 @@ class DaguInitialState(EventState):
         Logger.loginfo("Somme : " + str(self._detectedID))
         
         # Si on a reçu un entier positif, c'est que l'IA a détecté des panneaux
-        # On décompose la somme reçue
-        self.decompose()
+        if self._detectedID >= 0:
+            # On décompose la somme reçue
+            self.decompose()
 
-        # On regarde chaque panneau pour réinitialiser si ça fait plus de 5 s ou pour exécuter
-        for i in range(1, 7):
-            if(self._buffer[i].getTimer() != 0):
-                if(rospy.Time.now() - self._buffer[i].getTimer() >= self._timeToWait):
+            # On regarde chaque panneau pour réinitialiser si ça fait plus de 5 s ou pour exécuter
+            for i in range(1, 7):
+                if(self._buffer[i].getTimer() != 0):
+                    if(rospy.Time.now() - self._buffer[i].getTimer() >= self._timeToWait):
+                        self._buffer[i].resetTimes()
+
+                # Exécution dès qu'on a détecté le panneau plus de 5 fois
+                if self._buffer[i].getTimes() >= 5:
                     self._buffer[i].resetTimes()
-
-            # Exécution dès qu'on a détecté le panneau plus de 5 fois
-            if self._buffer[i].getTimes() >= 5:
-                self._buffer[i].resetTimes()
-            
-                if i == 1:
-                    return 'speed_50'
-                elif i == 2:
-                    return 'priority'
-                elif i == 3:
-                    return 'yieldSign'
-                elif i == 4:
-                    return 'stop'
-                elif i == 5:
-                    return 'forbidden'
-                elif i == 6:
-                    return 'danger'
-                else:
-                    return 'failed'
+                
+                    if i == 1:
+                        return 'speed_50'
+                    elif i == 2:
+                        return 'priority'
+                    elif i == 3:
+                        return 'yieldSign'
+                    elif i == 4:
+                        return 'stop'
+                    elif i == 5:
+                        return 'forbidden'
+                    elif i == 6:
+                        return 'danger'
+                    else:
+                        return 'failed'
+        else:
+            self._detectedID = self._detectedID * -1
+            Logger.loginfo("Angle reçu : ", str(self._detectedID))
 
     def decompose(self):
         for i in range(6, 0, -1):
