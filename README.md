@@ -13,4 +13,5 @@
 2. Mettre le dossier `dagu_behaviors` dans `catkin_ws/src/`
 3. Revenir au dossier `catkin_ws` et faire `catkin_make`
 
-*Changer les chemins pour s'adapter à la machine est potentiellement nécessaire. Voir les fichiers dans* `catkin_ws/src/dagu_behaviors/dagu_flexbe_states/src/dagu_flexbe_states/`
+### Informations
+Ceci est le dossier comprenant le comportement Flexbe du Dagu. Il est spécifique à la structure des fichiers de la Jetson Nano, il faut donc faire des modifications pour l'exécuter sur un autre pc. Voir les fichier dans `catkin_ws/src/dagu_behaviors/dagu_flexbe_states/src/dagu_flexbe_states/` : il faut changer les chemins au début des fichiers pour s'adapter à votre machine et enlever les lignes relatives aux `pipes` et décommenter la génération aléatoire d'entiers dans l'état initial.
