@@ -2,31 +2,27 @@
 #!/usr/bin/env python
 
 import rospy
-
+import sys
 from flexbe_core import EventState, Logger
-
+sys.path.insert(1, '/home/ros/catkin_ws/src/dagu_behaviors/scripts')
+import talker
 
 class DaguYieldState(EventState):
     '''
-    Etat du Dagu quand il détecte un panneau "Céder le passage".
-    Comportement à définir.
+    Etat du Dagu quand il détecte un panneau "Cédez le passage".
+    Envoi d'une chaîne de caractères dans un Publisher pour exécuter le script lié à cette chaîne.
+        - Redémarrage si aucun Dagu n'est détecté
 
-    <= stop			    Le Dagu s'arrête.
+    <= done			    On revient à l'état initial.
 
     '''
     
     def __init__(self):
-        super(DaguYieldState, self).__init__(outcomes = ['restarting'])
-        self._timeToWait = rospy.Duration(3)
+        super(DaguYieldState, self).__init__(outcomes = ['done'])
 
     def execute(self, userdata):
-        if(rospy.Time.now() - self._startTime >= self._timeToWait):
-            return 'restarting'
-
-    def on_enter(self, userdata):
-        self._startTime = rospy.Time.now()
-        Logger.loginfo('Panneau "Céder le passage" détecté.')
-        Logger.loginfo('Arrêt de la machine...')
-
-    def on_exit(self, userdata):
-        Logger.loginfo('Redémarrage du véhicule...')
+        try:
+            talker.talker("CedezPassageDetected")
+            return 'done'
+        except rospy.ROSInterruptException:
+            pass

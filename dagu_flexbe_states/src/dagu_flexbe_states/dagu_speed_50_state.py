@@ -2,27 +2,27 @@
 #!/usr/bin/env python
 
 import rospy
-
+import sys
 from flexbe_core import EventState, Logger
-
+sys.path.insert(1, '/home/ros/catkin_ws/src/dagu_behaviors/scripts')
+import talker
 
 class DaguSpeed50State(EventState):
     '''
     Etat du Dagu quand il détecte un panneau vitesse.
+    Envoi d'une chaîne de caractères dans un Publisher pour exécuter le script lié à cette chaîne.
+        - Changement de vitesse
 
-    <= changing			    Le Dagu change de vitesse.
+    <= done			    On revient à l'état initial.
 
     '''
 
     def __init__(self):
-        super(DaguSpeed50State, self).__init__(outcomes = ['changing'])
+        super(DaguSpeed50State, self).__init__(outcomes = ['done'])
 
     def execute(self, userdata):
-        Logger.loginfo('Return changing')
-        return 'changing'
-
-    def on_enter(self, userdata):
-        Logger.loginfo('Changement de la vitesse du véhicule...')
-
-    def on_exit(self, userdata):
-        Logger.loginfo('Vitesse modifiée...')
+        try:
+            talker.talker("Panel50Detected")
+            return 'done'
+        except rospy.ROSInterruptException:
+            pass

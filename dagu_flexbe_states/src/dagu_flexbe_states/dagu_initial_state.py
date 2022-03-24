@@ -4,11 +4,10 @@
 import rospy
 import sys
 import random
-
 from flexbe_core import EventState, Logger
 # sys.path.insert(1, '/home/isty/Documents/Dagu/YOLOv5-Lite')
 # import pipe
-sys.path.insert(1, '/home/isty/catkin_ws/src/dagu_behaviors/scripts')
+sys.path.insert(1, '/home/ros/catkin_ws/src/dagu_behaviors/scripts')
 import talker
 
 class DaguInitialState(EventState):
@@ -26,12 +25,16 @@ class DaguInitialState(EventState):
     <= danger                       Le Dagu a détecté un panneau "Danger".
     <= priority                     Le Dagu a détecté un panneau "Priorité".
     <= failed                       Erreur.
+
     '''
 
     def __init__(self):
         super(DaguInitialState, self).__init__(outcomes = ['default', 'stop', 'speed_50', 'yieldSign', 'forbidden', 'danger', 'priority', 'failed'])
         self._detectedID = 0
-        self._timeToWait = rospy.Duration(5)
+        self._timeToWait = rospy.Duration(4)
+        self._timeReset = rospy.Duration(5)
+        self._lastTimeExecute = -1
+        self._isDaguDetected = False
         # self._path_fifo = pipe.path
 
         # Tableau des panneaux
@@ -44,7 +47,10 @@ class DaguInitialState(EventState):
 
         # Tube pour récupérer les données de l'IA
         # self._fifo = open(self._path_fifo, 'r')
-        talker.talker("Start")
+        try:
+            talker.talker("Start")
+        except rospy.ROSInterruptException:
+            pass
 
     def execute(self, userdata):
         # self._detectedID = pipe.listener(self._fifo)
@@ -52,19 +58,50 @@ class DaguInitialState(EventState):
         self._detectedID = random.randint(1, 6)
         self._detectedID = pow(2, self._detectedID)
 
+        # On a exécuté une action qui arrête le Dagu pendant 3 secondes
+        # On redémarre les actions après 4 secondes et s'il n'y a pas de Dagu détecté
+        if self._lastTimeExecute != -1:
+            if self._detectedID == 0:
+                try:
+                    talker.talker("DaguDetected")
+                except rospy.ROSInterruptException:
+                    pass
+            elif rospy.Time.now() - self._lastTimeExecute >= self._timeToWait:
+                self._lastTimeExecute = -1
+            return 'default'
+
+        # Sécurité. Valeur censée ne jamais apparaître
         if self._detectedID == -1:
             return 'default'
+        
         Logger.loginfo("Somme : " + str(self._detectedID))
         
+        # Si on a détecté un Dagu hors action, on s'arrête
+        # On redémarre quand le Dagu n'est plus là
+        if self._detectedID == 0:
+            if self._isDaguDetected == False:
+                self._isDaguDetected = True
+                try:
+                    talker.talker("Stop")
+                except rospy.ROSInterruptException:
+                    pass
+            return 'default'
+        else:
+            self._isDaguDetected = False
+            try:
+                talker.talker("Start")
+            except rospy.ROSInterruptException:
+                pass
+
         # Si on a reçu un entier positif, c'est que l'IA a détecté des panneaux
-        if self._detectedID >= 0:
+        if self._detectedID > 0:
             # On décompose la somme reçue
             self.decompose()
 
             # On regarde chaque panneau pour réinitialiser si ça fait plus de 5 s ou pour exécuter
             for i in range(1, 7):
-                if(self._buffer[i].getTimer() != 0):
-                    if(rospy.Time.now() - self._buffer[i].getTimer() >= self._timeToWait):
+                if self._buffer[i].getTimer() != 0:
+                    if rospy.Time.now() - self._buffer[i].getTimer() >= self._timeReset:
                         self._buffer[i].resetTimes()
 
                 # Exécution dès qu'on a détecté le panneau plus de 5 fois
@@ -76,8 +113,10 @@ class DaguInitialState(EventState):
                     elif i == 2:
                         return 'priority'
                     elif i == 3:
+                        self._lastTimeExecute = rospy.Time.now()
                         return 'yieldSign'
                     elif i == 4:
+                        self._lastTimeExecute = rospy.Time.now()
                         return 'stop'
                     elif i == 5:
                         return 'forbidden'
@@ -89,6 +128,7 @@ class DaguInitialState(EventState):
             self._detectedID = self._detectedID * -1
             Logger.loginfo("Angle reçu : ", str(self._detectedID))
 
+    # Méthode de décomposition de la somme reçue
     def decompose(self):
         for i in range(6, 0, -1):
             power = pow(2, i)

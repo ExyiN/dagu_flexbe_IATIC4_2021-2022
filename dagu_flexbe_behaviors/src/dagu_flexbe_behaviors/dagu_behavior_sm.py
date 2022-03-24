@@ -69,38 +69,38 @@ class Dagu_BehaviorSM(Behavior):
 			# x:550 y:383
 			OperatableStateMachine.add('Forbidden',
 										DaguForbiddenDirState(),
-										transitions={'idle': 'finished'},
-										autonomy={'idle': Autonomy.Off})
+										transitions={'done': 'Initial_State'},
+										autonomy={'done': Autonomy.Off})
 
 			# x:552 y:280
 			OperatableStateMachine.add('Priority',
 										DaguPriorityState(),
-										transitions={'out': 'Initial_State'},
-										autonomy={'out': Autonomy.Off})
+										transitions={'done': 'Initial_State'},
+										autonomy={'done': Autonomy.Off})
 
 			# x:549 y:465
 			OperatableStateMachine.add('Speed50',
 										DaguSpeed50State(),
-										transitions={'changing': 'Initial_State'},
-										autonomy={'changing': Autonomy.Off})
+										transitions={'done': 'Initial_State'},
+										autonomy={'done': Autonomy.Off})
 
 			# x:551 y:62
 			OperatableStateMachine.add('Stop_State',
 										DaguStopState(),
-										transitions={'restarting': 'Initial_State'},
-										autonomy={'restarting': Autonomy.Off})
+										transitions={'done': 'Initial_State'},
+										autonomy={'done': Autonomy.Off})
 
 			# x:549 y:545
 			OperatableStateMachine.add('Yield',
 										DaguYieldState(),
-										transitions={'restarting': 'Initial_State'},
-										autonomy={'restarting': Autonomy.Off})
+										transitions={'done': 'Initial_State'},
+										autonomy={'done': Autonomy.Off})
 
 			# x:554 y:211
 			OperatableStateMachine.add('Danger',
 										DaguDangerState(),
-										transitions={'restarting': 'Initial_State'},
-										autonomy={'restarting': Autonomy.Off})
+										transitions={'done': 'Initial_State'},
+										autonomy={'done': Autonomy.Off})
 
 
 		return _state_machine
