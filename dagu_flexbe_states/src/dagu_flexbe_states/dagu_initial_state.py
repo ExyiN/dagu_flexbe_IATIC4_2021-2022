@@ -3,10 +3,13 @@
 
 import rospy
 import sys
+import random
 
 from flexbe_core import EventState, Logger
-sys.path.insert(1, '/home/isty/Documents/Dagu/YOLOv5-Lite')
-import pipe
+# sys.path.insert(1, '/home/isty/Documents/Dagu/YOLOv5-Lite')
+# import pipe
+sys.path.insert(1, '/home/isty/catkin_ws/src/dagu_behaviors/scripts')
+import talker
 
 class DaguInitialState(EventState):
     '''
@@ -29,7 +32,7 @@ class DaguInitialState(EventState):
         super(DaguInitialState, self).__init__(outcomes = ['default', 'stop', 'speed_50', 'yieldSign', 'forbidden', 'danger', 'priority', 'failed'])
         self._detectedID = 0
         self._timeToWait = rospy.Duration(5)
-        self._path_fifo = pipe.path
+        # self._path_fifo = pipe.path
 
         # Tableau des panneaux
         self._buffer = []
@@ -40,10 +43,15 @@ class DaguInitialState(EventState):
             self._buffer.append(sign)
 
         # Tube pour récupérer les données de l'IA
-        self._fifo = open(self._path_fifo, 'r')
+        # self._fifo = open(self._path_fifo, 'r')
+        talker.talker("Start")
 
     def execute(self, userdata):
-        self._detectedID = pipe.listener(self._fifo)
+        # self._detectedID = pipe.listener(self._fifo)
+
+        self._detectedID = random.randint(1, 6)
+        self._detectedID = pow(2, self._detectedID)
+
         if self._detectedID == -1:
             return 'default'
         Logger.loginfo("Somme : " + str(self._detectedID))
