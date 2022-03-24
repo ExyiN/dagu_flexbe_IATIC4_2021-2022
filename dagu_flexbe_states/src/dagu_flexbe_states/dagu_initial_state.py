@@ -5,9 +5,9 @@ import rospy
 import sys
 import random
 from flexbe_core import EventState, Logger
-# sys.path.insert(1, '/home/isty/Documents/Dagu/YOLOv5-Lite')
-# import pipe
-sys.path.insert(1, '/home/ros/catkin_ws/src/dagu_behaviors/scripts')
+sys.path.insert(1, '/home/isty/Documents/Dagu/YOLOv5-Lite')
+import pipe
+sys.path.insert(1, '/home/isty/catkin_ws/src/dagu_behaviors/scripts')
 import talker
 
 class DaguInitialState(EventState):
@@ -35,7 +35,7 @@ class DaguInitialState(EventState):
         self._timeReset = rospy.Duration(5)
         self._lastTimeExecute = -1
         self._isDaguDetected = False
-        # self._path_fifo = pipe.path
+        self._path_fifo = pipe.path
 
         # Tableau des panneaux
         self._buffer = []
@@ -46,17 +46,19 @@ class DaguInitialState(EventState):
             self._buffer.append(sign)
 
         # Tube pour récupérer les données de l'IA
-        # self._fifo = open(self._path_fifo, 'r')
+        self._fifo = open(self._path_fifo, 'r')
+
         try:
             talker.talker("Start")
         except rospy.ROSInterruptException:
             pass
 
     def execute(self, userdata):
-        # self._detectedID = pipe.listener(self._fifo)
+        self._detectedID = pipe.listener(self._fifo)
 
-        self._detectedID = random.randint(1, 6)
-        self._detectedID = pow(2, self._detectedID)
+        # Tester sans le tube (commenter les lignes avec le tube)
+        # self._detectedID = random.randint(1, 6)
+        # self._detectedID = pow(2, self._detectedID)
 
         # On a exécuté une action qui arrête le Dagu pendant 3 secondes
         # On redémarre les actions après 4 secondes et s'il n'y a pas de Dagu détecté

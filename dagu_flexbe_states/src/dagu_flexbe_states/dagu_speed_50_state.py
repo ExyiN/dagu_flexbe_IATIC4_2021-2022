@@ -4,7 +4,7 @@
 import rospy
 import sys
 from flexbe_core import EventState, Logger
-sys.path.insert(1, '/home/ros/catkin_ws/src/dagu_behaviors/scripts')
+sys.path.insert(1, '/home/isty/catkin_ws/src/dagu_behaviors/scripts')
 import talker
 
 class DaguSpeed50State(EventState):
