@@ -2,14 +2,16 @@
 #!/usr/bin/env python
 
 import rospy
+import sys
 
 from flexbe_core import EventState, Logger
-
+sys.path.insert(1, '/home/isty/catkin_ws/src/dagu_behaviors/scripts')
+import talker
 
 class DaguStopState(EventState):
     '''
     Etat du Dagu quand il détecte un panneau stop.
-    Arrêt pendant 3 secondes, puis retour à l'état initial.
+    Envoi d'une chaîne de caractères dans un Publisher pour exécuter le script lié à cette chaîne.
 
     <= restarting			    Le Dagu redémarre.
 
@@ -17,15 +19,10 @@ class DaguStopState(EventState):
 
     def __init__(self):
         super(DaguStopState, self).__init__(outcomes = ['restarting'])
-        self._timeToWait = rospy.Duration(3)
     
     def execute(self, userdata):
-        if(rospy.Time.now() - self._startTime >= self._timeToWait):
+        try:
+            talker("stop")
             return 'restarting'
-
-    def on_enter(self, userdata):
-        self._startTime = rospy.Time.now()
-        Logger.loginfo('Arrêt du véhicule...')
-
-    def on_exit(self, userdata):
-        Logger.loginfo('Véhicule arrêté...')
+        except rospy.ROSInterruptException:
+            pass
