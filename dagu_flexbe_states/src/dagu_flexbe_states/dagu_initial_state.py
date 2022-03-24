@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/env python
 
+from email import message
 import rospy
 import sys
 import random
@@ -89,11 +90,12 @@ class DaguInitialState(EventState):
                     pass
             return 'default'
         else:
-            self._isDaguDetected = False
-            try:
-                talker.talker("Start")
-            except rospy.ROSInterruptException:
-                pass
+            if self._isDaguDetected == True:
+                self._isDaguDetected = False
+                try:
+                    talker.talker("Start")
+                except rospy.ROSInterruptException:
+                    pass
 
         # Si on a reçu un entier positif, c'est que l'IA a détecté des panneaux
         if self._detectedID > 0:
@@ -128,7 +130,16 @@ class DaguInitialState(EventState):
                         return 'failed'
         else:
             self._detectedID = self._detectedID * -1
-            Logger.loginfo("Angle reçu : ", str(self._detectedID))
+            
+            if self._detectedID > 180:
+                message = "Turn_G"
+            else:
+                message = "Turn_D"
+
+            try:
+                talker.talker(message)
+            except rospy.ROSInterruptException:
+                pass
 
     # Méthode de décomposition de la somme reçue
     def decompose(self):
