@@ -5,7 +5,7 @@ import rospy
 from std_msgs.msg import String
 
 def talker(message):
-    pub = rospy.Publisher('flexbePub', String, queue_size=10)
+    pub = rospy.Publisher('/Resultats_Algo', String, queue_size=1000)
     rospy.loginfo(message)
     pub.publish(message)
 
