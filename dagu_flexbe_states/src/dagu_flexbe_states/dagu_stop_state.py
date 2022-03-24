@@ -22,7 +22,7 @@ class DaguStopState(EventState):
     
     def execute(self, userdata):
         try:
-            talker("stop")
+            talker("PanelStopDetected")
             return 'restarting'
         except rospy.ROSInterruptException:
             pass
