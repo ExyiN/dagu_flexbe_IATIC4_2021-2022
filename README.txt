@@ -1,6 +1,6 @@
 # ProjetIF
 ## Projet Interfilière IATIC - MT - SEE - SNPI 2021-2022 - Véhicule Autonome : Dagu
-## Comportement Flexbe - Par Jacques Tea et Antoine Vidal (IATIC 4)
+## Comportement Flexbe - Par Jacques Tea (IATIC 4)
 
 ### Installation
 - Prérequis : Avoir ROS installé et le dossier YOLO

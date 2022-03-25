@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/env python
+# Auteur : Jacques TEA (IATIC-4)
 
 import rospy
 import sys

@@ -1,13 +1,16 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/env python
+# Auteur : Jacques TEA (IATIC-4)
 
 from email import message
 import rospy
 import sys
 import random
 from flexbe_core import EventState, Logger
+############################################################### Pipe
 sys.path.insert(1, '/home/isty/Documents/Dagu/YOLOv5-Lite')
 import pipe
+###############################################################
 sys.path.insert(1, '/home/isty/catkin_ws/src/dagu_behaviors/scripts')
 import talker
 
@@ -36,6 +39,7 @@ class DaguInitialState(EventState):
         self._timeReset = rospy.Duration(5)
         self._lastTimeExecute = -1
         self._isDaguDetected = False
+        # Chemin du fifo
         self._path_fifo = pipe.path
 
         # Tableau des panneaux
@@ -55,6 +59,7 @@ class DaguInitialState(EventState):
             pass
 
     def execute(self, userdata):
+        # Lecture dans le tube
         self._detectedID = pipe.listener(self._fifo)
 
         # Tester sans le tube (commenter les lignes avec le tube)

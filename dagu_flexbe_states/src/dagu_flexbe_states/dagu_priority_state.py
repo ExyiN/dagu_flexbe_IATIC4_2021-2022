@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/env python
+# Auteur : Jacques TEA (IATIC-4)
 
 import rospy
 import sys
@@ -12,7 +13,7 @@ class DaguPriorityState(EventState):
     '''
     Etat du Dagu quand il détecte un panneau "Priorité".
     Envoi d'une chaîne de caractères dans un Publisher pour exécuter le script lié à cette chaîne.
-        -
+        - Aucun comportement implenté pour l'instant
 
     <= done			    On revient à l'état initial.
 

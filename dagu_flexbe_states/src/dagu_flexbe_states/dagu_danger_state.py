@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/env python
+# Auteur : Jacques TEA (IATIC-4)
 
 import rospy
 import sys
@@ -12,7 +13,7 @@ class DaguDangerState(EventState):
     '''
     Etat du Dagu quand il détecte un panneau "Danger".
     Envoi d'une chaîne de caractères dans un Publisher pour exécuter le script lié à cette chaîne.
-        - 
+        - Allumage d'une LED
 
     <= done			    On revient à l'état initial.
 
