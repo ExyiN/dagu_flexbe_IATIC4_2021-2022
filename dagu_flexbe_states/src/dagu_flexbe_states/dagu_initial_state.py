@@ -69,6 +69,7 @@ class DaguInitialState(EventState):
         # On a exécuté une action qui arrête le Dagu pendant 3 secondes
         # On redémarre les actions après 4 secondes et s'il n'y a pas de Dagu détecté
         if self._lastTimeExecute != -1:
+            # self._detectedID = random.randint(0, 1)
             if self._detectedID == 0:
                 try:
                     talker.talker("DaguDetected")
@@ -123,9 +124,11 @@ class DaguInitialState(EventState):
                         return 'priority'
                     elif i == 3:
                         self._lastTimeExecute = rospy.Time.now()
+                        self._timeToWait = rospy.Duration(0)
                         return 'yieldSign'
                     elif i == 4:
                         self._lastTimeExecute = rospy.Time.now()
+                        self._timeToWait = rospy.Duration(4)
                         return 'stop'
                     elif i == 5:
                         return 'forbidden'
